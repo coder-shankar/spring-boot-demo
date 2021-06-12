@@ -15,6 +15,8 @@ public class UserService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
 
+        //load from db, find by email
+
         return User.builder()
                    .username("shankar")
                    .password("$2a$10$A6pqUUqtXUnQnT5TrBvcv.OP6gJbnOqP82hywi2mWaq1ZznpXGlGm")

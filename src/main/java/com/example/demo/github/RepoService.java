@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.github;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,7 +20,7 @@ public class RepoService {
         return dao.save(repo);
     }
 
-    public List<Repo> save(List<Repo> repos) {
+    public List<Repo> saveList(List<Repo> repos) {
     return dao.saveAll(repos);
     }
 

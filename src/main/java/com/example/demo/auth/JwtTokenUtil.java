@@ -16,12 +16,12 @@ public class JwtTokenUtil {
 
     final String secret = "supersecret";
 
-    public String generateToken(UserDetails userDetails) {
+    public String generateToken(UserDetails userDetails, Long expireMinutes) {
 
         return Jwts.builder()
                    .setClaims(new HashMap<>())
                    .setSubject(userDetails.getUsername())
-                   .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * 10))
+                   .setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 60 * expireMinutes))
                    .signWith(SignatureAlgorithm.HS512, secret)
                    .compact();
     }
@@ -41,11 +41,11 @@ public class JwtTokenUtil {
 
     }
 
-    public boolean validate(String token, UserDetails userDetcails) {
+    public boolean validate(String token, UserDetails userDetails) {
         Date date = extractClaims(token, Claims::getExpiration);
         boolean before = date.before(new Date());
 
-        if (!before && extractUserName(token).equals(userDetcails.getUsername())) {
+        if (!before && extractUserName(token).equals(userDetails.getUsername())) {
             return true;
         }
 

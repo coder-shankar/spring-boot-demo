@@ -28,10 +28,12 @@ public class AuthController {
         try {
             final UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(authenticationRequest.getUserName(), authenticationRequest.getPassword());
             authenticationManager.authenticate(authentication);
-            final UserDetails userDetails = service.loadUserByUsername(authenticationRequest.getUserName());
-            final String jwt = jwtTokenUtil.generateToken(userDetails);
 
-            return new AuthenticationResponse(jwt);
+            final UserDetails userDetails = service.loadUserByUsername(authenticationRequest.getUserName());
+            final String accessToken = jwtTokenUtil.generateToken(userDetails, 10L);
+            final String refreshToken = jwtTokenUtil.generateToken(userDetails, 30L);
+
+            return new AuthenticationResponse(accessToken, refreshToken);
         } catch (Exception e) {
             log.error("Error {}", e);
             throw new RuntimeException(e.getMessage());

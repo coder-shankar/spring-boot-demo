@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.github;
 
 import lombok.Data;
 
