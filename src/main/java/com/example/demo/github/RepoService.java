@@ -1,6 +1,9 @@
 package com.example.demo.github;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.configurationprocessor.json.JSONObject;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -11,8 +14,12 @@ public class RepoService {
     @Autowired
     private RepoDao dao;
 
+    @Autowired
+    private ObjectMapper mapper;
 
-    public List<Repo> get() {
+    public List<Repo> get() throws Exception{
+        RepoDto abc = mapper.readValue("{\"name\":\"John\"}", RepoDto.class);
+        System.out.println("abc = " + abc);
         return dao.findAll();
     }
 

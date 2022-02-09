@@ -8,10 +8,8 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.reactive.function.client.ClientResponse;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
-import reactor.core.publisher.Mono;
 
 @RestController("github")
 public class GithubRepoResource {
@@ -42,16 +40,13 @@ public class GithubRepoResource {
                                           .uri('/' + userName + "/repos")
                                           .retrieve()
                                           .onStatus(HttpStatus::is4xxClientError, GlobalExceptionHandler::handle4xxError)
-                                          .onStatus(HttpStatus::is5xxServerError,GlobalExceptionHandler::handle5xxError)
+                                          .onStatus(HttpStatus::is5xxServerError, GlobalExceptionHandler::handle5xxError)
                                           .bodyToFlux(RepoDto.class)
                                           .doOnError(RuntimeException::new);
 
 
-
-        repoDtoFlux.subscribe(repoDto -> {
-            Repo mapper = GithubRepoResource.mapper(repoDto);
-            service.save(mapper);
-        });
+        repoDtoFlux.map(GithubRepoResource::mapper)
+                   .subscribe(service::save);
 
         return repoDtoFlux;
     }

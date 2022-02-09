@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/github_repo
+    username: postgres
+    password: 1997
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+    security:
+      oauth2:
+        client:
+          registration:
+            google:
+              clientId: 77836886041-tgjcojlnafmle11sutl544b7s87q9aq8.apps.googleusercontent.com
+              clientSecret: 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
+              redirectUri: "{baseUrl}/oauth2/callback/{registrationId}"
+              scope:
+                - email
+                - profile
+
