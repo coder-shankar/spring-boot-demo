@@ -40,7 +40,7 @@ class GithubRepoResourceTest {
     void getName() throws Exception {
 
         mockMvc.perform(MockMvcRequestBuilders.get("/github/username/shankar"))
-               .andExpect(status().isOk());
+               .andExpect(status().is4xxClientError());
 
     }
 }

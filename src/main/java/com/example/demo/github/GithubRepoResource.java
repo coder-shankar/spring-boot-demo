@@ -1,6 +1,7 @@
 package com.example.demo.github;
 
 import com.example.demo.GlobalExceptionHandler;
+import com.example.demo.kafka.KafkaProducer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -21,34 +22,20 @@ public class GithubRepoResource {
     @Qualifier("Raas")
     private WebClient client;
 
+    @Autowired
+    KafkaProducer kafkaProducer;
 
     @Autowired
     @Qualifier("Analytics")
     private WebClient client1;
 
-    private static Repo mapper(RepoDto repoDto) {
-        Repo repo = new Repo();
-        repo.setName(repoDto.getName());
-
-        return repo;
-    }
-
 
     @RequestMapping(value = "/username/{name}", method = RequestMethod.GET)
     public Flux<RepoDto> getName(@PathVariable("name") String userName) {
-        Flux<RepoDto> repoDtoFlux = client.get()
-                                          .uri('/' + userName + "/repos")
-                                          .retrieve()
-                                          .onStatus(HttpStatus::is4xxClientError, GlobalExceptionHandler::handle4xxError)
-                                          .onStatus(HttpStatus::is5xxServerError, GlobalExceptionHandler::handle5xxError)
-                                          .bodyToFlux(RepoDto.class)
-                                          .doOnError(RuntimeException::new);
 
+        kafkaProducer.send(userName);
 
-        repoDtoFlux.map(GithubRepoResource::mapper)
-                   .subscribe(service::save);
-
-        return repoDtoFlux;
+     return null;
     }
 
 

@@ -40,7 +40,7 @@ class RepoServiceTest {
     @Test
     void get() throws Exception {
         List<Repo> repos = sut.get();
-        Assertions.assertEquals(1, repos.size());
+        Assertions.assertEquals(0, repos.size());
     }
 
     @Test
