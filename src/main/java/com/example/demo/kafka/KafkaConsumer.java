@@ -7,15 +7,22 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import org.apache.kafka.clients.consumer.ConsumerRecord;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.http.HttpStatus;
+import org.springframework.kafka.annotation.EnableKafka;
 import org.springframework.kafka.annotation.KafkaListener;
+import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
 import java.util.List;
 
-@Component
+@Service
+@EnableKafka
+@EnableScheduling
+@ConditionalOnProperty(name = "kafka.enabled", havingValue = "true", matchIfMissing = true)
 public class KafkaConsumer {
 
     @Autowired
@@ -29,24 +36,24 @@ public class KafkaConsumer {
     private TestService testService;
 
 
-    @KafkaListener(topics = "test-topic", groupId = "group_id")
+    @KafkaListener(topics = "${com.esrx.dqm.mif.mtc.dsp.receive}")
     public void consume(String message) {
         System.out.println("message = " + message);
 
         String userName = message;
 
 
-        Flux<RepoDto> repoDtoFlux = client.get()
-                .uri('/' + userName + "/repos")
-                .retrieve()
-                .onStatus(HttpStatus::is4xxClientError, GlobalExceptionHandler::handle4xxError)
-                .onStatus(HttpStatus::is5xxServerError, GlobalExceptionHandler::handle5xxError)
-                .bodyToFlux(RepoDto.class)
-                .doOnError(RuntimeException::new);
+//        Flux<RepoDto> repoDtoFlux = client.get()
+//                .uri('/' + userName + "/repos")
+//                .retrieve()
+//                .onStatus(HttpStatus::is4xxClientError, GlobalExceptionHandler::handle4xxError)
+//                .onStatus(HttpStatus::is5xxServerError, GlobalExceptionHandler::handle5xxError)
+//                .bodyToFlux(RepoDto.class)
+//                .doOnError(RuntimeException::new);
 
         try {
-            repoDtoFlux.map(KafkaConsumer::mapper)
-                    .subscribe(service::save);
+//            repoDtoFlux.map(KafkaConsumer::mapper)
+//                    .subscribe(service::save);
 
             mockPrivateMethod();
         } catch (Exception e) {

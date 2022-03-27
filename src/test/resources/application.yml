@@ -1,3 +1,6 @@
+
+
+
 spring:
   datasource:
     url: jdbc:h2:mem:test
@@ -25,3 +28,13 @@ spring:
 
 
     bootstrap-servers: ${spring.embedded.kafka.brokers}
+
+com:
+  esrx:
+    dqm:
+      mif:
+        mtc:
+          dsp:
+            receive: "ABC"
+server:
+  port: 8082
