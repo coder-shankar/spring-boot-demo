@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class KafkaSenderConsumer {
 
-    @KafkaListener(topics = "test-topic2", groupId = "group_id")
+//    @KafkaListener(topics = "test-topic2", groupId = "group_id")
     public void consume(String message) {
 
         System.out.println("message at sender = ");
